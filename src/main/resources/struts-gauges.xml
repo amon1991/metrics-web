@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="gauges" extends="json-default" namespace="/gauges">
+
+
+		<!-- 获取最新的10组监控数据 -->
+		<action name="findLeastData" class="com.amon.personshare.metricsweb.action.GaugesAction" method="findLeastData">
+			<result name="success" type="json"></result>
+		</action>
+
+		<!-- 根据时间选择调出监控数据 -->
+		<action name="findDataByTime" class="com.amon.personshare.metricsweb.action.GaugesAction" method="findDataByTime">
+			<result name="success" type="json"></result>
+		</action>
+
+	</package>
+
+</struts>    

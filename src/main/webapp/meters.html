@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>应用监控平台 | Meters</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" type="text/css" href="css/cloud-admin.css">
+    <link rel="stylesheet" type="text/css" href="css/themes/default.css" id="skin-switcher">
+    <link rel="stylesheet" type="text/css" href="css/responsive.css">
+
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- JQUERY UI-->
+    <link rel="stylesheet" type="text/css"
+          href="js/jquery-ui-1.10.3.custom/css/custom-theme/jquery-ui-1.10.3.custom.min.css"/>
+    <!-- DATE RANGE PICKER -->
+    <link rel="stylesheet" type="text/css" href="js/bootstrap-daterangepicker/daterangepicker-bs3.css"/>
+    <!-- BOOTSTRAP SWITCH -->
+    <link rel="stylesheet" type="text/css" href="js/bootstrap-switch/bootstrap-switch.min.css"/>
+    <!-- MAGIC SUGGEST -->
+    <link rel="stylesheet" type="text/css" href="js/magic-suggest/magicsuggest-1.3.1-min.css"/>
+    <!-- DATE PICKER -->
+    <link rel="stylesheet" type="text/css" href="js/datepicker/themes/default.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/datepicker/themes/default.date.min.css"/>
+    <link rel="stylesheet" type="text/css" href="js/datepicker/themes/default.time.min.css"/>
+    <!-- DATA PICKER ADD-->
+    <link rel="stylesheet" type="text/css" href="jquey-ui-dpadd/jquery-ui-timepicker-addon.css"/>
+    <!-- XCHARTS -->
+    <link rel="stylesheet" type="text/css" href="js/xcharts/xcharts.min.css"/>
+    <!-- COLOR PICKER -->
+    <link rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.min.css"/>
+    <style type="text/css">
+        .ex-tooltip {
+            position: absolute;
+            background: #EEE;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            -ms-border-radius: 3px;
+            -o-border-radius: 3px;
+            border-radius: 3px;
+            padding: 5px;
+            -webkit-box-shadow: 0 1px 3px #000;
+            -moz-box-shadow: 0 1px 3px #000;
+            -ms-box-shadow: 0 1px 3px #000;
+            -o-box-shadow: 0 1px 3px #000;
+            box-shadow: 0 1px 3px #000;
+            border-collapse: separate;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<!-- HEADER -->
+<header class="navbar clearfix" id="header">
+    <div class="container">
+        <div class="navbar-brand">
+            <!-- COMPANY LOGO -->
+            <a href="counter.html">
+                <img src="img/logo/logo.png" alt="Cloud Admin Logo" class="img-responsive" height="30" width="120">
+            </a>
+            <!-- /COMPANY LOGO -->
+            <!-- TEAM STATUS FOR MOBILE -->
+            <div class="visible-xs">
+                <a href="#" class="team-status-toggle switcher btn dropdown-toggle">
+                    <i class="fa fa-users"></i>
+                </a>
+            </div>
+            <!-- /TEAM STATUS FOR MOBILE -->
+            <!-- SIDEBAR COLLAPSE -->
+            <div id="sidebar-collapse" class="sidebar-collapse btn">
+                <i class="fa fa-bars"
+                   data-icon1="fa fa-bars"
+                   data-icon2="fa fa-bars"></i>
+            </div>
+            <!-- /SIDEBAR COLLAPSE -->
+        </div>
+
+    </div>
+</header>
+<!--/HEADER -->
+<!-- PAGE -->
+<section id="page">
+    <!-- SIDEBAR -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-menu nav-collapse">
+            <div class="divide-20"></div>
+
+            <!-- SIDEBAR QUICK-LAUNCH -->
+            <!-- <div id="quicklaunch">
+            <!-- /SIDEBAR QUICK-LAUNCH -->
+
+            <!-- SIDEBAR MENU -->
+            <ul>
+                <li>
+                    <a href="counter.html">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> <span class="menu-text">Counter</span>
+                        <span class="selected"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="gauges.html">
+                        <i class="fa fa-fw fa-calendar-o"></i> <span class="menu-text">Gauges</span>
+                        <span class="selected"></span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="meters.html">
+                        <i class="fa fa-sun-o fa-fw"></i> <span class="menu-text">Meters</span>
+                        <span class="selected"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="histograms.html">
+                        <i class="fa fa-columns fa-fw"></i> <span class="menu-text">Histograms</span>
+                        <span class="selected"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="timers.html">
+                        <i class="fa fa-rss fa-fw"></i> <span class="menu-text">Timers</span>
+                        <span class="selected"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="healthchecks.html">
+                        <i class="fa fa-heart fa-fw"></i> <span class="menu-text">Health Checks</span>
+                        <span class="selected"></span>
+                    </a>
+                </li>
+
+            </ul>
+            <!-- /SIDEBAR MENU -->
+        </div>
+    </div>
+    <!-- /SIDEBAR -->
+    <div id="main-content">
+        <!-- SAMPLE BOX CONFIGURATION MODAL FORM-->
+        <div class="modal fade" id="box-config" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Box Settings</h4>
+                    </div>
+                    <div class="modal-body">
+                        Here goes box setting content.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /SAMPLE BOX CONFIGURATION MODAL FORM-->
+        <div class="container">
+            <div class="row">
+                <div id="content" class="col-lg-12">
+                    <!-- PAGE HEADER-->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="page-header">
+                                <!-- STYLER -->
+
+                                <!-- /STYLER -->
+                                <!-- BREADCRUMBS -->
+                                <ul class="breadcrumb">
+                                    <li>
+                                        <i class="fa fa-home"></i>
+                                        <a href="counter.html">Home</a>
+                                    </li>
+                                    <li>Meters - 平均状态指标</li>
+                                </ul>
+                                <!-- /BREADCRUMBS -->
+                                <div class="clearfix">
+                                    <h3 class="content-title pull-left">Meters</h3>
+                                </div>
+                                <div class="description">包括功能：显示最近一分钟、五分钟、十五分钟和总的时间的TPS</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /PAGE HEADER -->
+                        <!-- DYNAMIC CHART -->
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!-- BOX -->
+                                <div class="box border blue">
+                                    <div class="box-title">
+                                        <h4><i class="fa fa-bar-chart-o"></i>监控信息 - MetersDemo</h4>
+                                    </div>
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="dashbox panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class="panel-left blue">
+                                                            <i class="fa fa-twitter fa-3x"></i>
+                                                        </div>
+                                                        <div class="panel-right">
+                                                            <div class="number" id="num1"></div>
+                                                            <div class="title" id="time1"></div>
+												<span class="label label-info">
+													count <i class="fa fa-arrow-down"></i>
+												</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="divide-10"></div>
+                                        <figure class="chart" id="chart1" style="min-width:250px"></figure>
+                                    </div>
+                                </div>
+                                <!-- /BOX -->
+                            </div>
+                        </div>
+                        <!-- /DYNAMIC CHART -->
+                    <!-- /CONTENT-->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/PAGE -->
+<!-- JAVASCRIPTS -->
+<!-- Placed at the end of the document so the pages load faster -->
+
+<!-- JQUERY -->
+<script src="js/jquery/jquery-2.0.3.min.js"></script>
+<!-- JQUERY UI-->
+<script src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+<!-- BOOTSTRAP -->
+<script src="bootstrap-dist/js/bootstrap.min.js"></script>
+
+<!-- DATE RANGE PICKER -->
+<script src="js/bootstrap-daterangepicker/moment.min.js"></script>
+
+<script src="js/bootstrap-daterangepicker/daterangepicker.min.js"></script>
+<!-- SLIMSCROLL -->
+<script type="text/javascript" src="js/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js">
+</script>
+<script type="text/javascript" src="js/jQuery-slimScroll-1.3.0/slimScrollHorizontal.min.js"></script>
+<!-- BLOCK UI -->
+<script type="text/javascript" src="js/jQuery-BlockUI/jquery.blockUI.min.js"></script>
+<!-- D3 -->
+<script type="text/javascript" src="js/d3/d3.v3.min.js"></script>
+<!-- XCHARTS -->
+<script type="text/javascript" src="js/xcharts/xcharts.min.js"></script>
+<!-- DATE PICKER -->
+<script type="text/javascript" src="js/datepicker/picker.js"></script>
+<script type="text/javascript" src="js/datepicker/picker.date.js"></script>
+<script type="text/javascript" src="js/datepicker/picker.time.js"></script>
+<!-- DATE PICKER ADD -->
+<script type="text/javascript" src="jquey-ui-dpadd/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="jquey-ui-dpadd/jquery-ui-timepicker-zh-CN.js"></script>
+<!-- COOKIE -->
+<script type="text/javascript" src="js/jQuery-Cookie/jquery.cookie.min.js"></script>
+<!-- CUSTOM SCRIPT -->
+<script src="js/script.js"></script>
+<script>
+
+
+    jQuery(document).ready(function () {
+        chart1();//创建图表
+        setSingleData();
+    });
+
+    //设置单条最新数据(第一个指标)
+    function setSingleData() {
+        $.post("./meters/findReturnDate.action", null,
+                function (returndata, status) {
+                    if ("success" == status) {
+                        var obj = eval(returndata);
+                        var num = obj.returnNum;
+                        var time = obj.resultTime;
+                        $("#num1").html(num);
+                        $("#time1").html(time);
+                    }
+                });
+    }
+
+    function chart1() {
+        var tt = document.createElement('div');
+        tt.className = 'ex-tooltip';
+        document.body.appendChild(tt);
+        //向后台请求数据
+        $.post("./meters/findLeastData.action", null,
+                function (returndata, status) {
+                    if ("success" == status) {
+                        var obj = eval(returndata);
+                        data = obj.models;
+                        chart = new xChart('bar', data[0], '#chart1',{
+                            axisPaddingTop: 5,
+                            mouseover: function (d, i) {
+
+                                var pos = $(this).offset();
+                                $(tt).css({
+                                    left: (pos.left + 10)+'px',
+                                    top: (pos.top + 10) + 'px'
+                                });
+
+                                $(tt).text(d.x + ':' + d.y)
+                                        .show();
+                            },
+                            mouseout: function (d, i) {
+                                $(tt).hide();
+                            }
+                        });
+                    }
+                });
+    }
+
+</script>
+<!-- /JAVASCRIPTS -->
+</body>
+</html>

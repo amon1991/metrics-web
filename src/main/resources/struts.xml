@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
+	
+	<!-- struts2下载缓存路径 -->
+	<constant name="struts.multipart.saveDir" value="c:\temp\"/>
+	<constant name="struts.multipart.maxSize" value="1000000000"/> 
+	
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<!-- 开启使用开发模式，详细错误提示 -->
+	<constant name="struts.devMode" value="true" />
+	<!-- 指定每次配置文件更改后，自动重新加载 -->
+	<constant name="struts.configuration.xml.reload" value="true"/>
+	<!-- 去除使用struts标签的过程中，生成的一些table,td标签并且标签自动换行的方法 -->
+	<constant name="struts.ui.theme" value="simple" />
+
+
+	<include file="struts-watcher.xml" />
+	<include file="struts-xcharts.xml" />
+	<include file="struts-gauges.xml" />
+	<include file="struts-healthchecks.xml" />
+	<include file="struts-histograms.xml" />
+	<include file="struts-meters.xml" />
+	<include file="struts-timers.xml" />
+
+</struts>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="meters" extends="json-default" namespace="/meters">
+		<action name="findLeastData" class="com.amon.personshare.metricsweb.action.MetersAction" method="findLeastData">
+			<result name="success" type="json"></result>
+		</action>
+
+		<!-- 查询最新的单条数据-->
+		<action name="findReturnDate" class="com.amon.personshare.metricsweb.action.MetersAction" method="findReturnDate">
+			<result name="success" type="json"></result>
+		</action>
+
+	</package>
+</struts>

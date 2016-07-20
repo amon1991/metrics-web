@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="xcharts" extends="json-default" namespace="/xcharts">
+	
+	    <!-- 获取最新的10组监控数据 -->
+	    <action name="findLeastData" class="com.amon.personshare.metricsweb.action.XchartsAction" method="findLeastData">
+			<result name="success" type="json"></result>
+		</action>
+
+	    <!-- 根据时间选择调出监控数据 -->
+	    <action name="findDataByTime" class="com.amon.personshare.metricsweb.action.XchartsAction" method="findDataByTime">
+			<result name="success" type="json"></result>
+		</action>
+
+		<!-- 根据不同时间段，计算TPS -->
+		<action name="findDataByDateRegion" class="com.amon.personshare.metricsweb.action.XchartsAction" method="findDataByDateRegion">
+			<result name="success" type="json"></result>
+		</action>
+
+		<!-- 查询最新的单条数据-->
+		<action name="findSingleLeastData" class="com.amon.personshare.metricsweb.action.XchartsAction" method="findSingleLeastData">
+			<result name="success" type="json"></result>
+		</action>
+
+	</package>
+
+</struts>    

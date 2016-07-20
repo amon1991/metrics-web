@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="histograms" extends="json-default" namespace="/histograms">
+		<action name="findLeastData" class="com.amon.personshare.metricsweb.action.HistogramsAction" method="findLeastData">
+			<result name="success" type="json"></result>
+		</action>
+
+		<!-- 查询最新的单条数据-->
+		<action name="findReturnDate" class="com.amon.personshare.metricsweb.action.HistogramsAction" method="findReturnDate">
+			<result name="success" type="json"></result>
+		</action>
+
+		<action name="findReturnDateByTime" class="com.amon.personshare.metricsweb.action.HistogramsAction" method="findReturnDateByTime">
+			<result name="success" type="json"></result>
+		</action>
+
+		<action name="findDataByTime" class="com.amon.personshare.metricsweb.action.HistogramsAction" method="findDataByTime">
+			<result name="success" type="json"></result>
+		</action>
+
+	</package>
+
+</struts>    

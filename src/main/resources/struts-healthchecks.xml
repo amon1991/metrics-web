@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="healthchecks" extends="json-default" namespace="/healthchecks">
+
+		<!-- 获取最新心跳数据-->
+		<action name="findIsHealth" class="com.amon.personshare.metricsweb.action.HealthCheckAction" method="findIsHealth">
+			<result name="success" type="json"></result>
+		</action>
+
+	</package>
+
+</struts>    
