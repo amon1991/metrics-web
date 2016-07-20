@@ -370,6 +370,9 @@
 		var data_2;
 		var nowtype_2 = 0;
 
+        var myKeyCouples = "[{appname:\"tsdata\",metricskey:\"com.amon.personshare.metrics_mysql.CounterTest.pedding-jobs_1\"}" +
+                ",{appname:\"tsdata\",metricskey:\"com.amon.personshare.metrics_mysql.CounterTest.pedding-jobs_2\"}]";
+
 		jQuery(document).ready(function() {
 
 			$("#bgtime").datetimepicker();
@@ -429,7 +432,9 @@
 
 		//将数据从后台取出，置入本地对象中
 		function setdata(){
-			$.post("./xcharts/findLeastData.action", null ,
+			$.post("./xcharts/findLeastData.action", {
+                        keyCouples: myKeyCouples
+                    } ,
 					function(returndata, status) {
 						if ("success" == status) {
 							var obj = eval(returndata);
@@ -440,7 +445,9 @@
 
 		//将数据从后台取出，置入本地对象中
 		function setdata_2(){
-			$.post("./xcharts/findDataByDateRegion.action", null ,
+			$.post("./xcharts/findDataByDateRegion.action", {
+                        keyCouples: myKeyCouples
+                    } ,
 					function(returndata, status) {
 						if ("success" == status) {
 							var obj = eval(returndata);
@@ -457,7 +464,9 @@
 			document.body.appendChild(tt);
 
 			//向后台请求数据
-			$.post("./xcharts/findLeastData.action", null ,
+			$.post("./xcharts/findLeastData.action", {
+                        keyCouples: myKeyCouples
+                    } ,
 					function(returndata, status) {
 						if ("success" == status) {
 
@@ -517,7 +526,8 @@
 									$.post("./xcharts/findDataByTime.action", {
 												bgTime:start,
 												endTime:end,
-												resultNum:resultNum
+												resultNum:resultNum,
+												keyCouples: myKeyCouples
 											},
 											function(returndata, status) {
 												if ("success" == status) {
@@ -552,7 +562,9 @@
 		function chart2() {
 
 			//向后台请求数据
-			$.post("./xcharts/findDataByDateRegion.action", null ,
+			$.post("./xcharts/findDataByDateRegion.action",  {
+                        keyCouples: myKeyCouples
+                    } ,
 					function(returndata, status) {
 						if ("success" == status) {
 
@@ -595,7 +607,8 @@
 
 									var dateRegionType = $("#timeRegionId").val();
 									$.post("./xcharts/findDataByDateRegion.action", {
-												dateRegionType:dateRegionType
+												dateRegionType:dateRegionType,
+                                                keyCouples: myKeyCouples
 											},
 											function(returndata, status) {
 												if ("success" == status) {

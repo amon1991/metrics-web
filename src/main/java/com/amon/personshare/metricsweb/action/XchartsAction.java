@@ -1,8 +1,10 @@
 package com.amon.personshare.metricsweb.action;
 
+import com.alibaba.fastjson.JSON;
 import com.amon.personshare.metricsweb.model.DynamicChartData;
 import com.amon.personshare.metricsweb.model.DynamicChartModel;
 import com.amon.personshare.metricsweb.model.DynamicChartXYZ;
+import com.amon.personshare.metricsweb.model.KeyCouple;
 import com.amon.personshare.metricsweb.service.GetDynamicChartJsonService;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -10,6 +12,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2015/11/11.
@@ -35,6 +38,8 @@ public class XchartsAction extends ActionSupport {
     private String appName;    //应用名称
     private String metricsKey; //指标key
 
+    private String keyCouples; // keyCouple数组（json数组形式，在后台decode）
+
     /**
      * 返回最新的单条记录
      * @return
@@ -56,7 +61,7 @@ public class XchartsAction extends ActionSupport {
      */
     public String findDataByDateRegion(){
 
-        if (dateRegionType==null)
+        if (null==dateRegionType)
             dateRegionType = "1";
 
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -75,48 +80,51 @@ public class XchartsAction extends ActionSupport {
             bgTime = sdf.format(new Date(nowtime-1000*60*60*24*7));
         }
 
-        //构造第一段数据
-        DynamicChartData dynamicChartData_get = new DynamicChartData();
-        dynamicChartData_get.setClassName(".main.l1");
-        GetDynamicChartJsonService service = new GetDynamicChartJsonService();
-        //最关键步骤，获取数据
-        ArrayList<DynamicChartXYZ> dynamicChartXYZList = service.
-                getxyListByDateRegion("tsdata", "com.amon.personshare.metrics_mysql.CounterTest.pedding-jobs_1", bgTime, endTime, TableName);
-        service.setXYListOfTPS(dynamicChartXYZList);//对获取的数据进行迭代计算，计算出其每秒钟（实际上是最小间隔时间）处理的数据量
-        dynamicChartData_get.setData(service.getXYListOfNum(dynamicChartXYZList,MaxNum));//对数据进行过滤（只最多保留100个数据）
 
-        DynamicChartData dynamicChartData_put = new DynamicChartData();
-        dynamicChartData_put.setClassName(".main.l2");
-        ArrayList<DynamicChartXYZ> dynamicChartXYZList_2 = service.
-                getxyListByDateRegion("tsdata", "com.amon.personshare.metrics_mysql.CounterTest.pedding-jobs_2", bgTime, endTime,TableName);
-        service.setXYListOfTPS(dynamicChartXYZList_2);
-        dynamicChartData_put.setData(service.getXYListOfNum(dynamicChartXYZList_2,MaxNum));
+        if (null!=keyCouples&&!keyCouples.isEmpty()){
 
-        DynamicChartModel dynamicChartModel = new DynamicChartModel();
-        ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
-        dynamicChartModel.setxScale("ordinal");
-        dynamicChartModel.setComp(new ArrayList<String>());
-        dynamicChartModel.setType("line");
-        dynamicChartModel.setyScale("linear");
-        dynamicChartModel.setMain(main);
+            // 构造线性图
+            DynamicChartModel dynamicChartModel = new DynamicChartModel();
+            ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
+            dynamicChartModel.setxScale("ordinal");
+            dynamicChartModel.setComp(new ArrayList<String>());
+            dynamicChartModel.setType("line");
+            dynamicChartModel.setyScale("linear");
+            dynamicChartModel.setMain(main);
 
-        main.add(dynamicChartData_get);
-        main.add(dynamicChartData_put);
+            // 构造柱状图
+            DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
+            dynamicChartModel_2.setxScale("ordinal");
+            dynamicChartModel_2.setComp(new ArrayList<String>());
+            dynamicChartModel_2.setType("bar");
+            dynamicChartModel_2.setyScale("linear");
+            dynamicChartModel_2.setMain(main);
 
-        //构造第二段数据
-        DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
-        dynamicChartModel_2.setxScale("ordinal");
-        dynamicChartModel_2.setComp(new ArrayList<String>());
-        dynamicChartModel_2.setType("bar");
-        dynamicChartModel_2.setyScale("linear");
-        dynamicChartModel_2.setMain(main);
 
-        //将两段数据组合成一个json数据
-        models = new ArrayList<>();
-        models.add(dynamicChartModel);
-        models.add(dynamicChartModel_2);
+            GetDynamicChartJsonService service = new GetDynamicChartJsonService();
 
-        //System.out.println(JSONArray.fromObject(models).toString());
+            DynamicChartData dynamicChartData;
+            ArrayList<DynamicChartXYZ> dynamicChartXYZList;
+
+
+            List<KeyCouple> myKeyCouples = JSON.parseArray(keyCouples,KeyCouple.class);
+
+            for (int i = 1; i <= myKeyCouples.size(); i++) {
+                dynamicChartData = new DynamicChartData();
+                dynamicChartData.setClassName(".main.l"+i);
+                //对获取的数据进行迭代计算，计算出其每秒钟（实际上是最小间隔时间）处理的数据量
+                dynamicChartXYZList = service.getxyListByDateRegion(myKeyCouples.get(i-1).getAppname(), myKeyCouples.get(i-1).getMetricskey(), bgTime, endTime, TableName);
+                //对数据进行过滤（只最多保留100个数据）
+                dynamicChartData.setData(service.getXYListOfNum(dynamicChartXYZList,MaxNum));
+                main.add(dynamicChartData);
+            }
+
+            //将两段数据组合成一个json数据
+            models = new ArrayList<>();
+            models.add(dynamicChartModel);
+            models.add(dynamicChartModel_2);
+
+        }
 
         dateRegionType = null;
         return SUCCESS;
@@ -131,45 +139,47 @@ public class XchartsAction extends ActionSupport {
 
         System.out.println("bgTime:"+bgTime+"//endTime:"+endTime+"//size:"+resultNum);
 
-        //构造第一段数据
-        DynamicChartModel dynamicChartModel = new DynamicChartModel();
-        ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
-        dynamicChartModel.setxScale("ordinal");
-        dynamicChartModel.setComp(new ArrayList<String>());
-        dynamicChartModel.setType("line-dotted");
-        dynamicChartModel.setyScale("linear");
-        dynamicChartModel.setMain(main);
+        if (null!=keyCouples&&!keyCouples.isEmpty()){
 
-        //将构造的数据置入DynamicChartData的list中
-        GetDynamicChartJsonService service = new GetDynamicChartJsonService();
-        DynamicChartData dynamicChartData_get =
-                service.getJsonStrByDateRegion_counter("tsdata", "com.amon.personshare.metrics_mysql.CounterTest.pedding-jobs_1",
-                        ".main.l1", bgTime ,endTime,resultNum,TableName);
-        DynamicChartData dynamicChartData_put =
-                service.getJsonStrByDateRegion_counter("tsdata", "com.amon.personshare.metrics_mysql.CounterTest.pedding-jobs_2",
-                        ".main.l2", bgTime, endTime,resultNum,TableName);
+            // 构造线性图
+            DynamicChartModel dynamicChartModel = new DynamicChartModel();
+            ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
+            dynamicChartModel.setxScale("ordinal");
+            dynamicChartModel.setComp(new ArrayList<String>());
+            dynamicChartModel.setType("line-dotted");
+            dynamicChartModel.setyScale("linear");
+            dynamicChartModel.setMain(main);
 
-        DynamicChartData dynamicChartData_three =
-                service.getJsonStrByDateRegion_counter("tsdata", "com.amon.personshare.metrics_mysql.CounterTest.pedding-jobs_3",
-                        ".main.l3", bgTime, endTime,resultNum,TableName);
-
-        main.add(dynamicChartData_get);
-        main.add(dynamicChartData_put);
-        main.add(dynamicChartData_three);
+            // 构造柱状图
+            DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
+            dynamicChartModel_2.setxScale("ordinal");
+            dynamicChartModel_2.setComp(new ArrayList<String>());
+            dynamicChartModel_2.setType("bar");
+            dynamicChartModel_2.setyScale("linear");
+            dynamicChartModel_2.setMain(main);
 
 
-        //构造第二段数据
-        DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
-        dynamicChartModel_2.setxScale("ordinal");
-        dynamicChartModel_2.setComp(new ArrayList<String>());
-        dynamicChartModel_2.setType("bar");
-        dynamicChartModel_2.setyScale("linear");
-        dynamicChartModel_2.setMain(main);
+            // 将构造的数据置入DynamicChartData的list中
+            GetDynamicChartJsonService service = new GetDynamicChartJsonService();
 
-        //将两段数据组合成一个json数据
-        models = new ArrayList<>();
-        models.add(dynamicChartModel);
-        models.add(dynamicChartModel_2);
+            DynamicChartData dynamicChartData;
+
+            List<KeyCouple> myKeyCouples = JSON.parseArray(keyCouples,KeyCouple.class);
+
+            for (int i = 1; i <= myKeyCouples.size(); i++) {
+
+                dynamicChartData = service.getJsonStrByDateRegion_counter(myKeyCouples.get(i-1).getAppname(),myKeyCouples.get(i-1).getMetricskey(),
+                        ".main.l"+i,bgTime ,endTime,resultNum,TableName);
+                main.add(dynamicChartData);
+
+            }
+
+            //将两段数据组合成一个json数据
+            models = new ArrayList<>();
+            models.add(dynamicChartModel);
+            models.add(dynamicChartModel_2);
+
+        }
 
         //System.out.println(JSONArray.fromObject(models).toString());
 
@@ -182,37 +192,44 @@ public class XchartsAction extends ActionSupport {
      */
     public String findLeastData(){
 
-        //构造第一段数据
-        DynamicChartModel dynamicChartModel = new DynamicChartModel();
-        ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
-        dynamicChartModel.setxScale("ordinal");
-        dynamicChartModel.setComp(new ArrayList<String>());
-        dynamicChartModel.setType("line-dotted");
-        dynamicChartModel.setyScale("linear");
-        dynamicChartModel.setMain(main);
+        if (null!=keyCouples&&!keyCouples.isEmpty()){
 
-        //将构造的数据置入DynamicChartData的list中
-        GetDynamicChartJsonService service = new GetDynamicChartJsonService();
-        DynamicChartData dynamicChartData_get =
-                service.getJsonStrByNum_counter("tsdata", "com.amon.personshare.metrics_mysql.CounterTest.pedding-jobs_1", 10, ".main.l1",TableName);
-        DynamicChartData dynamicChartData_put =
-                service.getJsonStrByNum_counter("tsdata", "com.amon.personshare.metrics_mysql.CounterTest.pedding-jobs_2", 10, ".main.l2",TableName);
+            // 构造线性图
+            DynamicChartModel dynamicChartModel = new DynamicChartModel();
+            ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
+            dynamicChartModel.setxScale("ordinal");
+            dynamicChartModel.setComp(new ArrayList<String>());
+            dynamicChartModel.setType("line-dotted");
+            dynamicChartModel.setyScale("linear");
+            dynamicChartModel.setMain(main);
 
-        main.add(dynamicChartData_get);
-        main.add(dynamicChartData_put);
+            // 构造柱状图
+            DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
+            dynamicChartModel_2.setxScale("ordinal");
+            dynamicChartModel_2.setComp(new ArrayList<String>());
+            dynamicChartModel_2.setType("bar");
+            dynamicChartModel_2.setyScale("linear");
+            dynamicChartModel_2.setMain(main);
 
-        //构造第二段数据
-        DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
-        dynamicChartModel_2.setxScale("ordinal");
-        dynamicChartModel_2.setComp(new ArrayList<String>());
-        dynamicChartModel_2.setType("bar");
-        dynamicChartModel_2.setyScale("linear");
-        dynamicChartModel_2.setMain(main);
 
-        //将两段数据组合成一个json数据
-        models = new ArrayList<>();
-        models.add(dynamicChartModel);
-        models.add(dynamicChartModel_2);
+            // 将构造的数据置入DynamicChartData的list中
+            GetDynamicChartJsonService service = new GetDynamicChartJsonService();
+
+            DynamicChartData dynamicChartData;
+            List<KeyCouple> myKeyCouples = JSON.parseArray(keyCouples,KeyCouple.class);
+
+            for (int i = 1; i <= myKeyCouples.size(); i++) {
+                dynamicChartData = service.getJsonStrByNum_counter(myKeyCouples.get(i-1).getAppname(),myKeyCouples.get(i-1).getMetricskey()
+                        , 10, ".main.l"+i,TableName);
+                main.add(dynamicChartData);
+            }
+
+            // 将两段数据组合成一个json数据
+            models = new ArrayList<>();
+            models.add(dynamicChartModel);
+            models.add(dynamicChartModel_2);
+
+        }
 
         //System.out.println(JSONArray.fromObject(models).toString());
 
@@ -289,5 +306,21 @@ public class XchartsAction extends ActionSupport {
 
     public void setMetricsKey(String metricsKey) {
         this.metricsKey = metricsKey;
+    }
+
+    public int getMaxNum() {
+        return MaxNum;
+    }
+
+    public String getTableName() {
+        return TableName;
+    }
+
+    public String getKeyCouples() {
+        return keyCouples;
+    }
+
+    public void setKeyCouples(String keyCouples) {
+        this.keyCouples = keyCouples;
     }
 }
