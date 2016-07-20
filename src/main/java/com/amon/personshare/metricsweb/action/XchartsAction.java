@@ -40,6 +40,36 @@ public class XchartsAction extends ActionSupport {
 
     private String keyCouples; // keyCouple数组（json数组形式，在后台decode）
 
+    private DynamicChartModel dynamicChartModel; // 构造线性图
+    private DynamicChartModel dynamicChartModel_2; // 构造柱状图
+
+    /**
+     * 重置线型模型
+     */
+    private void resetDynamicChartModel(){
+
+        this.dynamicChartModel = new DynamicChartModel();
+        this.dynamicChartModel.setxScale("ordinal");
+        this.dynamicChartModel.setComp(new ArrayList<String>());
+        this.dynamicChartModel.setType("line-dotted");
+        this.dynamicChartModel.setyScale("linear");
+
+    }
+
+    /**
+     * 重置柱型模型
+     */
+    private void resetdynamicChartModel_2(){
+
+        dynamicChartModel_2 = new DynamicChartModel();
+        dynamicChartModel_2.setxScale("ordinal");
+        dynamicChartModel_2.setComp(new ArrayList<String>());
+        dynamicChartModel_2.setType("bar");
+        dynamicChartModel_2.setyScale("linear");
+
+    }
+
+
     /**
      * 返回最新的单条记录
      * @return
@@ -83,22 +113,13 @@ public class XchartsAction extends ActionSupport {
 
         if (null!=keyCouples&&!keyCouples.isEmpty()){
 
-            // 构造线性图
-            DynamicChartModel dynamicChartModel = new DynamicChartModel();
-            ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
-            dynamicChartModel.setxScale("ordinal");
-            dynamicChartModel.setComp(new ArrayList<String>());
-            dynamicChartModel.setType("line");
-            dynamicChartModel.setyScale("linear");
-            dynamicChartModel.setMain(main);
+            ArrayList<DynamicChartData> main = new ArrayList<>();
 
-            // 构造柱状图
-            DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
-            dynamicChartModel_2.setxScale("ordinal");
-            dynamicChartModel_2.setComp(new ArrayList<String>());
-            dynamicChartModel_2.setType("bar");
-            dynamicChartModel_2.setyScale("linear");
-            dynamicChartModel_2.setMain(main);
+            this.resetDynamicChartModel();
+            this.dynamicChartModel.setMain(main);
+
+            this.resetdynamicChartModel_2();
+            this.dynamicChartModel_2.setMain(main);
 
 
             GetDynamicChartJsonService service = new GetDynamicChartJsonService();
@@ -141,22 +162,13 @@ public class XchartsAction extends ActionSupport {
 
         if (null!=keyCouples&&!keyCouples.isEmpty()){
 
-            // 构造线性图
-            DynamicChartModel dynamicChartModel = new DynamicChartModel();
-            ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
-            dynamicChartModel.setxScale("ordinal");
-            dynamicChartModel.setComp(new ArrayList<String>());
-            dynamicChartModel.setType("line-dotted");
-            dynamicChartModel.setyScale("linear");
-            dynamicChartModel.setMain(main);
+            ArrayList<DynamicChartData> main = new ArrayList<>();
 
-            // 构造柱状图
-            DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
-            dynamicChartModel_2.setxScale("ordinal");
-            dynamicChartModel_2.setComp(new ArrayList<String>());
-            dynamicChartModel_2.setType("bar");
-            dynamicChartModel_2.setyScale("linear");
-            dynamicChartModel_2.setMain(main);
+            this.resetDynamicChartModel();
+            this.dynamicChartModel.setMain(main);
+
+            this.resetdynamicChartModel_2();
+            this.dynamicChartModel_2.setMain(main);
 
 
             // 将构造的数据置入DynamicChartData的list中
@@ -194,22 +206,13 @@ public class XchartsAction extends ActionSupport {
 
         if (null!=keyCouples&&!keyCouples.isEmpty()){
 
-            // 构造线性图
-            DynamicChartModel dynamicChartModel = new DynamicChartModel();
-            ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
-            dynamicChartModel.setxScale("ordinal");
-            dynamicChartModel.setComp(new ArrayList<String>());
-            dynamicChartModel.setType("line-dotted");
-            dynamicChartModel.setyScale("linear");
-            dynamicChartModel.setMain(main);
+            ArrayList<DynamicChartData> main = new ArrayList<>();
 
-            // 构造柱状图
-            DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
-            dynamicChartModel_2.setxScale("ordinal");
-            dynamicChartModel_2.setComp(new ArrayList<String>());
-            dynamicChartModel_2.setType("bar");
-            dynamicChartModel_2.setyScale("linear");
-            dynamicChartModel_2.setMain(main);
+            this.resetDynamicChartModel();
+            this.dynamicChartModel.setMain(main);
+
+            this.resetdynamicChartModel_2();
+            this.dynamicChartModel_2.setMain(main);
 
 
             // 将构造的数据置入DynamicChartData的list中

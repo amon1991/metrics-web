@@ -1,11 +1,14 @@
 package com.amon.personshare.metricsweb.action;
 
+import com.alibaba.fastjson.JSON;
 import com.amon.personshare.metricsweb.model.DynamicChartData;
 import com.amon.personshare.metricsweb.model.DynamicChartModel;
+import com.amon.personshare.metricsweb.model.KeyCouple;
 import com.amon.personshare.metricsweb.service.GetDynamicChartJsonService;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by 710-6 on 2015/11/17.
@@ -20,47 +23,73 @@ public class GaugesAction extends ActionSupport {
     private String endTime; //查询的结束时间
     private int resultNum = 10;  //一次返回的最多数据量
 
+    private final String  TableName = "gauges";
+    private String keyCouples; // keyCouple数组（json数组形式，在后台decode）
+
+
+    private DynamicChartModel dynamicChartModel; // 构造线性图
+    private DynamicChartModel dynamicChartModel_2; // 构造柱状图
+
+    /**
+     * 重置线型模型
+     */
+    private void resetDynamicChartModel(){
+
+        this.dynamicChartModel = new DynamicChartModel();
+        this.dynamicChartModel.setxScale("ordinal");
+        this.dynamicChartModel.setComp(new ArrayList<String>());
+        this.dynamicChartModel.setType("line-dotted");
+        this.dynamicChartModel.setyScale("linear");
+
+    }
+
+    /**
+     * 重置柱型模型
+     */
+    private void resetdynamicChartModel_2(){
+
+        dynamicChartModel_2 = new DynamicChartModel();
+        dynamicChartModel_2.setxScale("ordinal");
+        dynamicChartModel_2.setComp(new ArrayList<String>());
+        dynamicChartModel_2.setType("bar");
+        dynamicChartModel_2.setyScale("linear");
+
+    }
+
     /**
      * 获取最新数据
      * @return
      */
     public String findLeastData(){
 
-        System.out.println("Gauges...");
+        if (null!=keyCouples&&!keyCouples.isEmpty()){
 
-        //构造第一段数据
-        DynamicChartModel dynamicChartModel = new DynamicChartModel();
-        ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
-        dynamicChartModel.setxScale("ordinal");
-        dynamicChartModel.setComp(new ArrayList<String>());
-        dynamicChartModel.setType("line-dotted");
-        dynamicChartModel.setyScale("linear");
-        dynamicChartModel.setMain(main);
+            ArrayList<DynamicChartData> main = new ArrayList<>();
 
-        //将构造的数据置入DynamicChartData的list中
-        GetDynamicChartJsonService service = new GetDynamicChartJsonService();
-        DynamicChartData dynamicChartData_get =
-                service.getJsonStrByNum_counter("tsdata", "com.iecas.metrics.mysql.test.GaugesTest.job.size", 10, ".main.l1","gauges");
-        DynamicChartData dynamicChartData_put =
-                service.getJsonStrByNum_counter("tsdata", "com.iecas.metrics.mysql.test.GaugesTest.job_2.size", 10, ".main.l2","gauges");
+            this.resetDynamicChartModel();
+            this.dynamicChartModel.setMain(main);
 
-        main.add(dynamicChartData_get);
-        main.add(dynamicChartData_put);
+            this.resetdynamicChartModel_2();
+            this.dynamicChartModel_2.setMain(main);
 
-        //构造第二段数据
-        DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
-        dynamicChartModel_2.setxScale("ordinal");
-        dynamicChartModel_2.setComp(new ArrayList<String>());
-        dynamicChartModel_2.setType("bar");
-        dynamicChartModel_2.setyScale("linear");
-        dynamicChartModel_2.setMain(main);
+            //将构造的数据置入DynamicChartData的list中
+            GetDynamicChartJsonService service = new GetDynamicChartJsonService();
 
-        //将两段数据组合成一个json数据
-        models = new ArrayList<DynamicChartModel>();
-        models.add(dynamicChartModel);
-        models.add(dynamicChartModel_2);
+            DynamicChartData dynamicChartData;
 
-        //System.out.println(JSONArray.fromObject(models).toString());
+            List<KeyCouple> myKeyCouples = JSON.parseArray(keyCouples, KeyCouple.class);
+
+            for (int i = 1; i <= myKeyCouples.size(); i++) {
+                dynamicChartData = service.getJsonStrByNum_counter(myKeyCouples.get(i-1).getAppname(), myKeyCouples.get(i-1).getMetricskey(), 10, ".main.l"+i,TableName);
+                main.add(dynamicChartData);
+            }
+
+            //将两段数据组合成一个json数据
+            models = new ArrayList<>();
+            models.add(this.dynamicChartModel);
+            models.add(this.dynamicChartModel_2);
+
+        }
 
         return SUCCESS;
     }
@@ -69,39 +98,33 @@ public class GaugesAction extends ActionSupport {
 
         //System.out.println("bgTime:"+bgTime+"//endTime:"+endTime+"//size:"+resultNum);
 
-        //构造第一段数据
-        DynamicChartModel dynamicChartModel = new DynamicChartModel();
-        ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
-        dynamicChartModel.setxScale("ordinal");
-        dynamicChartModel.setComp(new ArrayList<String>());
-        dynamicChartModel.setType("line-dotted");
-        dynamicChartModel.setyScale("linear");
-        dynamicChartModel.setMain(main);
+        if (null!=keyCouples&&!keyCouples.isEmpty()){
 
-        //将构造的数据置入DynamicChartData的list中
-        GetDynamicChartJsonService service = new GetDynamicChartJsonService();
-        DynamicChartData dynamicChartData_get =
-                service.getJsonStrByDateRegion_counter("tsdata", "com.iecas.metrics.mysql.test.GaugesTest.job.size",
-                        ".main.l1", bgTime ,endTime,resultNum,"gauges");
-        DynamicChartData dynamicChartData_put =
-                service.getJsonStrByDateRegion_counter("tsdata", "com.iecas.metrics.mysql.test.GaugesTest.job_2.size",
-                        ".main.l2", bgTime, endTime,resultNum,"gauges");
+            ArrayList<DynamicChartData> main = new ArrayList<>();
 
-        main.add(dynamicChartData_get);
-        main.add(dynamicChartData_put);
+            this.resetDynamicChartModel();
+            this.dynamicChartModel.setMain(main);
 
-        //构造第二段数据
-        DynamicChartModel dynamicChartModel_2 = new DynamicChartModel();
-        dynamicChartModel_2.setxScale("ordinal");
-        dynamicChartModel_2.setComp(new ArrayList<String>());
-        dynamicChartModel_2.setType("bar");
-        dynamicChartModel_2.setyScale("linear");
-        dynamicChartModel_2.setMain(main);
+            this.resetdynamicChartModel_2();
+            this.dynamicChartModel_2.setMain(main);
 
-        //将两段数据组合成一个json数据
-        models = new ArrayList<DynamicChartModel>();
-        models.add(dynamicChartModel);
-        models.add(dynamicChartModel_2);
+            //将构造的数据置入DynamicChartData的list中
+            GetDynamicChartJsonService service = new GetDynamicChartJsonService();
+
+            List<KeyCouple> myKeyCouples = JSON.parseArray(keyCouples, KeyCouple.class);
+            DynamicChartData dynamicChartData;
+            for (int i = 1; i <= myKeyCouples.size(); i++) {
+                dynamicChartData  =service.getJsonStrByDateRegion_counter(myKeyCouples.get(i-1).getAppname(), myKeyCouples.get(i-1).getMetricskey(),
+                                ".main.l"+i, bgTime ,endTime,resultNum,TableName);
+                main.add(dynamicChartData);
+            }
+
+            //将两段数据组合成一个json数据
+            models = new ArrayList<>();
+            models.add(dynamicChartModel);
+            models.add(dynamicChartModel_2);
+
+        }
 
         //System.out.println(JSONArray.fromObject(models).toString());
 
@@ -138,5 +161,17 @@ public class GaugesAction extends ActionSupport {
 
     public void setResultNum(int resultNum) {
         this.resultNum = resultNum;
+    }
+
+    public String getTableName() {
+        return TableName;
+    }
+
+    public String getKeyCouples() {
+        return keyCouples;
+    }
+
+    public void setKeyCouples(String keyCouples) {
+        this.keyCouples = keyCouples;
     }
 }
