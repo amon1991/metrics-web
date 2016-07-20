@@ -40,7 +40,8 @@ public class GetTimersService {
         sdf.format(date);
 
         //查询当前时间之前的最后一条数据
-        String sql = "select * from timers ,(select max(tm) maxt from timers WHERE timers.tm <= '"+date+"') a where timers.tm=a.maxt";
+        String sql = "select * from timers ,(select max(tm) maxt from timers WHERE timers.tm <= '"+date+"' AND appname = '"+appName+"' AND metricskey = '"+metricskey+"' ) a " +
+                "where timers.tm=a.maxt AND appname = '"+appName+"' AND metricskey = '"+metricskey+"' ";
 
         try {
 

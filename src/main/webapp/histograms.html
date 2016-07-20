@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>应用监控平台 | Histograms</title>
+    <title> 监控平台模板 | Histograms </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -32,25 +32,7 @@
     <link rel="stylesheet" type="text/css" href="js/xcharts/xcharts.min.css"/>
     <!-- COLOR PICKER -->
     <link rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.min.css"/>
-    <style type="text/css">
-        .ex-tooltip {
-            position: absolute;
-            background: #EEE;
-            -webkit-border-radius: 3px;
-            -moz-border-radius: 3px;
-            -ms-border-radius: 3px;
-            -o-border-radius: 3px;
-            border-radius: 3px;
-            padding: 5px;
-            -webkit-box-shadow: 0 1px 3px #000;
-            -moz-box-shadow: 0 1px 3px #000;
-            -ms-box-shadow: 0 1px 3px #000;
-            -o-box-shadow: 0 1px 3px #000;
-            box-shadow: 0 1px 3px #000;
-            border-collapse: separate;
-            display: none;
-        }
-    </style>
+
 </head>
 <body>
 <!-- HEADER -->
@@ -284,17 +266,22 @@
 
     var i=0;
     var data;
+
     jQuery(document).ready(function () {
 
         $("#bgtime").datetimepicker();
 
         chart1();//创建图表
         setSingleData();
+
     });
 
     //设置单条最新数据(第一个指标)
     function setSingleData() {
-        $.post("./histograms/findReturnDate.action", null,
+        $.post("./histograms/findReturnDate.action", {
+                    appname:"tsdata",
+                    keymetrics:"com.amon.personshare.metrics_mysql.HistogramsTest.random"
+                },
                 function (returndata, status) {
                     if ("success" == status) {
                         var obj = eval(returndata);
@@ -305,9 +292,14 @@
                     }
                 });
     }
+
     function setSingleDataByTime() {
         var start = $("#bgtime").val();
-        $.post("./histograms/findReturnDateByTime.action", {bgTime: start},
+        $.post("./histograms/findReturnDateByTime.action", {
+                    bgTime: start,
+                    appname:"tsdata",
+                    keymetrics:"com.amon.personshare.metrics_mysql.HistogramsTest.random"
+                },
                 function (returndata, status) {
                     if ("success" == status) {
                         var obj = eval(returndata);
@@ -321,7 +313,10 @@
 
     //将数据从后台取出，置入本地对象中
     function setdata() {
-        $.post("./histograms/findLeastData.action", null,
+        $.post("./histograms/findLeastData.action", {
+                    appname:"tsdata",
+                    keymetrics:"com.amon.personshare.metrics_mysql.HistogramsTest.random"
+                },
                 function (returndata, status) {
                     if ("success" == status) {
                         var obj = eval(returndata);
@@ -329,13 +324,17 @@
                     }
                 });
     }
+
     //Dynamic Chart
     function chart1() {
         var tt = document.createElement('div');
         tt.className = 'ex-tooltip';
         document.body.appendChild(tt);
         //向后台请求数据
-        $.post("./histograms/findLeastData.action", null,
+        $.post("./histograms/findLeastData.action", {
+                    appname:"tsdata",
+                    keymetrics:"com.amon.personshare.metrics_mysql.HistogramsTest.random"
+                },
                 function (returndata, status) {
                     if ("success" == status) {
                         var obj = eval(returndata);
@@ -373,7 +372,11 @@
                         toggles.on('click', function (d, i) {
                             if (i == 0) {//时间选择查询
                                 var start = $("#bgtime").val();
-                                $.post("./histograms/findDataByTime.action", {bgTime: start},
+                                $.post("./histograms/findDataByTime.action", {
+                                            bgTime: start,
+                                            appname:"tsdata",
+                                            keymetrics:"com.amon.personshare.metrics_mysql.HistogramsTest.random"
+                                        },
                                         function (returndata, status) {
                                             if ("success" == status) {
                                                 var obj = eval(returndata);

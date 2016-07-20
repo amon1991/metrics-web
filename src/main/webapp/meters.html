@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>应用监控平台 | Meters</title>
+    <title> 监控平台模板 | Meters</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -32,25 +32,7 @@
     <link rel="stylesheet" type="text/css" href="js/xcharts/xcharts.min.css"/>
     <!-- COLOR PICKER -->
     <link rel="stylesheet" type="text/css" href="js/colorpicker/css/colorpicker.min.css"/>
-    <style type="text/css">
-        .ex-tooltip {
-            position: absolute;
-            background: #EEE;
-            -webkit-border-radius: 3px;
-            -moz-border-radius: 3px;
-            -ms-border-radius: 3px;
-            -o-border-radius: 3px;
-            border-radius: 3px;
-            padding: 5px;
-            -webkit-box-shadow: 0 1px 3px #000;
-            -moz-box-shadow: 0 1px 3px #000;
-            -ms-box-shadow: 0 1px 3px #000;
-            -o-box-shadow: 0 1px 3px #000;
-            box-shadow: 0 1px 3px #000;
-            border-collapse: separate;
-            display: none;
-        }
-    </style>
+
 </head>
 <body>
 <!-- HEADER -->
@@ -271,7 +253,10 @@
 
     //设置单条最新数据(第一个指标)
     function setSingleData() {
-        $.post("./meters/findReturnDate.action", null,
+        $.post("./meters/findReturnDate.action", {
+                    appname:"tsdata",
+                    keymetrics:"com.amon.personshare.metrics_mysql.MetersTest.request"
+                },
                 function (returndata, status) {
                     if ("success" == status) {
                         var obj = eval(returndata);
@@ -288,7 +273,10 @@
         tt.className = 'ex-tooltip';
         document.body.appendChild(tt);
         //向后台请求数据
-        $.post("./meters/findLeastData.action", null,
+        $.post("./meters/findLeastData.action", {
+                    appname:"tsdata",
+                    keymetrics:"com.amon.personshare.metrics_mysql.MetersTest.request"
+                },
                 function (returndata, status) {
                     if ("success" == status) {
                         var obj = eval(returndata);

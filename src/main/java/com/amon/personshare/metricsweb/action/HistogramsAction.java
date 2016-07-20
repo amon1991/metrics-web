@@ -20,9 +20,12 @@ public class HistogramsAction extends ActionSupport {
     private int returnNum;     //向前端返回的最新数据
     private String resultTime; //向前端返回的最新数据时间
 
+    private String appname;
+    private String keymetrics;
+
     public String findReturnDate(){
         GetHistogramsService service=new GetHistogramsService();
-        DynamicChartData dynamicChartData=service.getJsonStr_histograms("tsdata", "com.iecas.metrics.mysql.test.HistogramsTest.random", ".main.l1");
+        DynamicChartData dynamicChartData=service.getJsonStr_histograms(appname, keymetrics , ".main.l1");
         returnNum=dynamicChartData.getCount();
         resultTime=dynamicChartData.getDate();
         return SUCCESS;
@@ -30,7 +33,7 @@ public class HistogramsAction extends ActionSupport {
 
     public String findReturnDateByTime(){
         GetHistogramsService service=new GetHistogramsService();
-        DynamicChartData dynamicChartData=service.getJsonStrByTime_histograms("tsdata", "com.iecas.metrics.mysql.test.HistogramsTest.random", ".main.l1",bgTime);
+        DynamicChartData dynamicChartData=service.getJsonStrByTime_histograms( appname , keymetrics , ".main.l1", bgTime );
         returnNum=dynamicChartData.getCount();
         resultTime=dynamicChartData.getDate();
         return SUCCESS;
@@ -44,7 +47,7 @@ public class HistogramsAction extends ActionSupport {
 
         //构造数据
         DynamicChartModel dynamicChartModel = new DynamicChartModel();
-        ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
+        ArrayList<DynamicChartData> main = new ArrayList<>();
         dynamicChartModel.setxScale("ordinal");
         dynamicChartModel.setComp(new ArrayList<String>());
         dynamicChartModel.setType("bar");
@@ -54,11 +57,11 @@ public class HistogramsAction extends ActionSupport {
         //将构造的数据置入DynamicChartData的list中
         GetHistogramsService service = new GetHistogramsService();
         DynamicChartData dynamicChartData =
-                service.getJsonStr_histograms("tsdata", "com.iecas.metrics.mysql.test.HistogramsTest.random", ".main.l1");
+                service.getJsonStr_histograms( appname , keymetrics , ".main.l1");
 
         main.add(dynamicChartData);
 
-        models = new ArrayList<DynamicChartModel>();
+        models = new ArrayList<>();
         models.add(dynamicChartModel);
 
         //System.out.println(JSONArray.fromObject(models).toString());
@@ -71,7 +74,7 @@ public class HistogramsAction extends ActionSupport {
 
         //构造数据
         DynamicChartModel dynamicChartModel = new DynamicChartModel();
-        ArrayList<DynamicChartData> main = new ArrayList<DynamicChartData>();
+        ArrayList<DynamicChartData> main = new ArrayList<>();
         dynamicChartModel.setxScale("ordinal");
         dynamicChartModel.setComp(new ArrayList<String>());
         dynamicChartModel.setType("bar");
@@ -81,13 +84,13 @@ public class HistogramsAction extends ActionSupport {
         //将构造的数据置入DynamicChartData的list中
         GetHistogramsService service = new GetHistogramsService();
         DynamicChartData dynamicChartData =
-                service.getJsonStrByTime_histograms("tsdata", "com.iecas.metrics.mysql.test.HistogramsTest.random",
+                service.getJsonStrByTime_histograms( appname, keymetrics ,
                         ".main.l1", bgTime );
 
         main.add(dynamicChartData);
 
 
-        models = new ArrayList<DynamicChartModel>();
+        models = new ArrayList<>();
         models.add(dynamicChartModel);
 
         //System.out.println(JSONArray.fromObject(models).toString());
@@ -126,4 +129,21 @@ public class HistogramsAction extends ActionSupport {
     public void setReturnNum(int returnNum) {
         this.returnNum = returnNum;
     }
+
+    public String getAppname() {
+        return appname;
+    }
+
+    public void setAppname(String appname) {
+        this.appname = appname;
+    }
+
+    public String getKeymetrics() {
+        return keymetrics;
+    }
+
+    public void setKeymetrics(String keymetrics) {
+        this.keymetrics = keymetrics;
+    }
+
 }

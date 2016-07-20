@@ -41,7 +41,8 @@ public class GetStaticChartJsonService {
         sdf.format(date);
 
         //查询当前时间之前的最后一条数据
-        String sql = "select * from meters ,(select max(tm) maxt from meters WHERE meters.tm <= '"+date+"') a where meters.tm=a.maxt";
+        String sql = "select * from meters ,(select max(tm) maxt from meters WHERE meters.tm <= '"+date+"' AND appname = '"+appName+"' AND metricskey = '"+metricskey+"' ) a " +
+                "where meters.tm=a.maxt AND appname = '"+appName+"' AND metricskey = '"+metricskey+"' ";
 
         try {
 

@@ -16,7 +16,8 @@ public class MetersAction extends ActionSupport {
     private static final long serialVersionUID = 6419719214229203153L;
     private ArrayList<DynamicChartModel> models;//返回给前端的json数据
 
-
+    private String appname;
+    private String keymetrics;
 
     private int returnNum;     //向前端返回的最新数据
     private String resultTime; //向前端返回的最新数据时间
@@ -26,11 +27,13 @@ public class MetersAction extends ActionSupport {
      * @return
      */
     public String findReturnDate(){
+
         GetStaticChartJsonService service=new GetStaticChartJsonService();
-        DynamicChartData dynamicChartData=service.getJsonStr_meters("tsdata", "com.iecas.metrics.mysql.test.MetersTest.request", ".main.l1");
+        DynamicChartData dynamicChartData=service.getJsonStr_meters(appname, keymetrics, ".main.l1");
         returnNum=dynamicChartData.getCount();
         resultTime=dynamicChartData.getDate();
         return SUCCESS;
+
     }
 
     /**
@@ -52,7 +55,7 @@ public class MetersAction extends ActionSupport {
         //将构造的数据置入DynamicChartData的list中
         GetStaticChartJsonService service = new GetStaticChartJsonService();
         DynamicChartData dynamicChartData =
-                service.getJsonStr_meters("tsdata", "com.iecas.metrics.mysql.test.MetersTest.request", ".main.l1");
+                service.getJsonStr_meters(appname, keymetrics, ".main.l1");
 
         main.add(dynamicChartData);
 
@@ -61,6 +64,7 @@ public class MetersAction extends ActionSupport {
 
         //System.out.println(JSONArray.fromObject(models).toString());
         return SUCCESS;
+
     }
 
     public ArrayList<DynamicChartModel> getModels() {
@@ -85,6 +89,22 @@ public class MetersAction extends ActionSupport {
 
     public void setReturnNum(int returnNum) {
         this.returnNum = returnNum;
+    }
+
+    public String getAppname() {
+        return appname;
+    }
+
+    public void setAppname(String appname) {
+        this.appname = appname;
+    }
+
+    public String getKeymetrics() {
+        return keymetrics;
+    }
+
+    public void setKeymetrics(String keymetrics) {
+        this.keymetrics = keymetrics;
     }
 
 }

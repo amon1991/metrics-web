@@ -18,16 +18,22 @@ public class TimersAction extends ActionSupport {
     private int returnNum;     //向前端返回的最新数据
     private String resultTime; //向前端返回的最新数据时间
 
+    private String appname;
+    private String keymetrics;
+
+
     /**
      * 获取最新数据的总数和最后处理的时间
      * @return
      */
     public String findReturnDate(){
+
         GetTimersService service=new GetTimersService();
-        DynamicChartData dynamicChartData=service.getJsonStr_timers("tsdata", "com.iecas.metrics.mysql.test.TimersTest.request", ".main.l1");
+        DynamicChartData dynamicChartData=service.getJsonStr_timers(appname, keymetrics, ".main.l1");
         returnNum=dynamicChartData.getCount();
         resultTime=dynamicChartData.getDate();
         return SUCCESS;
+
     }
 
     /**
@@ -48,7 +54,7 @@ public class TimersAction extends ActionSupport {
         //将构造的数据置入DynamicChartData的list中
         GetTimersService service = new GetTimersService();
         DynamicChartData dynamicChartData =
-                service.getJsonStr_timers("tsdata", "com.iecas.metrics.mysql.test.TimersTest.request", ".main.l1");
+                service.getJsonStr_timers(appname, keymetrics, ".main.l1");
         main.add(dynamicChartData);
 
         models = new ArrayList();
@@ -84,4 +90,21 @@ public class TimersAction extends ActionSupport {
     public void setReturnNum(int returnNum) {
         this.returnNum = returnNum;
     }
+
+    public String getAppname() {
+        return appname;
+    }
+
+    public void setAppname(String appname) {
+        this.appname = appname;
+    }
+
+    public String getKeymetrics() {
+        return keymetrics;
+    }
+
+    public void setKeymetrics(String keymetrics) {
+        this.keymetrics = keymetrics;
+    }
+
 }

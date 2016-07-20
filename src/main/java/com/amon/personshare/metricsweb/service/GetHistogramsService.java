@@ -2,7 +2,6 @@ package com.amon.personshare.metricsweb.service;
 
 import com.amon.personshare.metricsweb.dao.MysqlBaseDao;
 import com.amon.personshare.metricsweb.model.DynamicChartData;
-import com.amon.personshare.metricsweb.model.DynamicChartXYZ;
 import com.amon.personshare.metricsweb.model.DynamicChartXYZ2;
 
 import java.sql.Connection;
@@ -42,7 +41,9 @@ public class GetHistogramsService {
         sdf.format(date);
 
         //查询当前时间之前的最后一条数据
-        String sql = "select * from histograms ,(select max(tm) maxt from histograms WHERE histograms.tm <= '"+date+"') a where histograms.tm=a.maxt";
+        String sql = "select * from histograms ,(select max(tm) maxt from histograms WHERE histograms.tm <= '"+date+"' AND appname = '"+appName+"' AND metricskey = '"+metricskey+"' ) a " +
+                "where histograms.tm=a.maxt AND appname = '"+appName+"' AND metricskey = '"+metricskey+"' ";
+
 
         try {
 
@@ -131,7 +132,7 @@ public class GetHistogramsService {
 
         bgTime+=":00";
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String sql = "select * from histograms where tm='"+bgTime+"'";
+        String sql = "select * from histograms where tm='"+bgTime+"' AND appname = '"+appName+"' AND metricskey = '"+metricskey+"'";
         System.out.println(sql);
 
         try {
@@ -141,8 +142,6 @@ public class GetHistogramsService {
             rs = sm.executeQuery(sql);
 
             ArrayList<DynamicChartXYZ2> dynamicChartXYZ2List = new ArrayList();
-
-            DynamicChartXYZ dynamicChartXYZ;
 
             while (rs.next()){
 
